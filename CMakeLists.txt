@@ -38,6 +38,12 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
   include(HandleLLVMOptions)
 
   set(PACKAGE_VERSION "${LLVM_PACKAGE_VERSION}")
+  include(VersionFromVCS)
+  option(CLANG_APPEND_VC_REV
+    "Append the version control system revision id to CLANG version" OFF)
+  if( CLANG_APPEND_VC_REV )
+    add_version_info_from_vcs(PACKAGE_VERSION)
+  endif()
 
   set(LLVM_MAIN_INCLUDE_DIR "${LLVM_MAIN_SRC_DIR}/include")
   set(LLVM_BINARY_DIR ${CMAKE_BINARY_DIR})
