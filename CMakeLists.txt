@@ -149,7 +149,7 @@ configure_file(
 
 include(LLVMParseArguments)
 
-function(clang_tablegen)
+function(tablegen_impl proj)
   # Syntax:
   # clang_tablegen output-file [tablegen-arg ...] SOURCE source-file
   # [[TARGET cmake-target-name] [DEPENDS extra-dependency ...]]
@@ -169,14 +169,22 @@ function(clang_tablegen)
   endif()
 
   set( LLVM_TARGET_DEFINITIONS ${CTG_SOURCE} )
-  tablegen( CLANG ${CTG_DEFAULT_ARGS} )
+  tablegen( ${proj} ${CTG_DEFAULT_ARGS} )
 
   list( GET CTG_DEFAULT_ARGS 0 output_file )
   if( CTG_TARGET )
     add_custom_target( ${CTG_TARGET} DEPENDS ${output_file} ${CTG_DEPENDS} )
     set_target_properties( ${CTG_TARGET} PROPERTIES FOLDER "Clang tablegenning")
   endif()
-endfunction(clang_tablegen)
+endfunction(tablegen_impl)
+
+function(clang_tablegen)
+  tablegen_impl(CLANG ${ARGN})
+endfunction()
+
+function(llvm_tablegen)
+  tablegen_impl(LLVM ${ARGN})
+endfunction()
 
 macro(add_clang_library name)
   llvm_process_sources(srcs ${ARGN})
