@@ -13,11 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 #include "clang/Basic/Diagnostic.h"
-#include "clang/Driver/Arg.h"
-#include "clang/Driver/ArgList.h"
 #include "clang/Driver/DriverDiagnostic.h"
 #include "clang/Driver/CC1AsOptions.h"
-#include "clang/Driver/OptTable.h"
 #include "clang/Driver/Options.h"
 #include "clang/Frontend/FrontendDiagnostic.h"
 #include "clang/Frontend/TextDiagnosticPrinter.h"
@@ -36,6 +33,8 @@
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/MC/MCAsmBackend.h"
 #include "llvm/MC/MCTargetAsmParser.h"
+#include "llvm/Support/Arg.h"
+#include "llvm/Support/ArgList.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/FormattedStream.h"
 #include "llvm/Support/ErrorHandling.h"
@@ -44,6 +43,7 @@
 #include "llvm/Support/PrettyStackTrace.h"
 #include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/Host.h"
+#include "llvm/Support/OptTable.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/Signals.h"
 #include "llvm/Support/TargetRegistry.h"
@@ -158,7 +158,7 @@ bool AssemblerInvocation::CreateFromArgs(AssemblerInvocation &Opts,
   }
 
   // Issue errors on unknown arguments.
-  for (arg_iterator it = Args->filtered_begin(cc1asoptions::OPT_UNKNOWN),
+  for llvm::arg_iterator it = Args->filtered_begin(cc1asoptions::OPT_UNKNOWN),
          ie = Args->filtered_end(); it != ie; ++it) {
     Diags.Report(diag::err_drv_unknown_argument) << (*it) ->getAsString(*Args);
     Success = false;
@@ -185,7 +185,7 @@ bool AssemblerInvocation::CreateFromArgs(AssemblerInvocation &Opts,
   // Frontend Options
   if (Args->hasArg(OPT_INPUT)) {
     bool First = true;
-    for (arg_iterator it = Args->filtered_begin(OPT_INPUT),
+    for llvm::arg_iterator it = Args->filtered_begin(OPT_INPUT),
            ie = Args->filtered_end(); it != ie; ++it, First=false) {
       const Arg *A = it;
       if (First)

@@ -262,7 +262,7 @@ namespace CodeGen {
       ID.AddInteger(RegParm);
       ID.AddInteger(Required.getOpaqueData());
       getReturnType().Profile(ID);
-      for (arg_iterator it = arg_begin(), ie = arg_end(); it != ie; ++it)
+      for llvm::arg_iterator it = arg_begin(), ie = arg_end(); it != ie; ++it)
         it->type.Profile(ID);
     }
     static void Profile(llvm::FoldingSetNodeID &ID,

@@ -11,8 +11,29 @@
 //
 //===----------------------------------------------------------------------===//
 
-// Include the common option parsing interfaces.
-include "OptParser.td"
+include "llvm/Support/OptParser.td"
+
+// DriverOption - The option is a "driver" option, and should not be forwarded
+// to gcc.
+def DriverOption : OptionFlag;
+
+// LinkerInput - The option is a linker input.
+def LinkerInput : OptionFlag;
+
+// NoArgumentUnused - Don't report argument unused warnings for this option; this
+// is useful for options like -static or -dynamic which a user may always end up
+// passing, even if the platform defaults to (or only supports) that option.
+def NoArgumentUnused : OptionFlag;
+
+// NoForward - The option should not be implicitly forwarded to other tools.
+def NoForward : OptionFlag;
+
+// Unsupported - The option is unsupported, and the driver will reject command
+// lines that use it.
+def Unsupported : OptionFlag;
+
+// CC1Option - This option should be accepted by clang -cc1.
+def CC1Option : OptionFlag;
 
 /////////
 // Groups
@@ -140,7 +161,7 @@ def ccc_ : Joined<["-"], "ccc-">, Group<ccc_Group>, Flags<[Unsupported]>;
 
 def _HASH_HASH_HASH : Flag<["-"], "###">, Flags<[DriverOption]>,
     HelpText<"Print the commands to run for this compilation">;
-// The '--' option is here for the sake of compatibility with gcc, but is 
+// The '--' option is here for the sake of compatibility with gcc, but is
 // being ignored by the driver.
 def _DASH_DASH : Flag<["--"], "">, Flags<[DriverOption]>;
 def A : JoinedOrSeparate<["-"], "A">;
@@ -458,7 +479,7 @@ def fmsc_version : Joined<["-"], "fmsc-version=">, Group<f_Group>, Flags<[CC1Opt
 def fdelayed_template_parsing : Flag<["-"], "fdelayed-template-parsing">, Group<f_Group>,
   HelpText<"Parse templated function definitions at the end of the "
            "translation unit ">,  Flags<[CC1Option]>;
-def fmodule_cache_path : Separate<["-"], "fmodule-cache-path">, Group<i_Group>, 
+def fmodule_cache_path : Separate<["-"], "fmodule-cache-path">, Group<i_Group>,
   Flags<[NoForward,CC1Option]>, MetaVarName<"<directory>">,
   HelpText<"Specify the module cache path">;
 def fmodules : Flag <["-"], "fmodules">, Group<f_Group>, Flags<[NoForward,CC1Option]>,
@@ -566,7 +587,7 @@ def fobjc_gc : Flag<["-"], "fobjc-gc">, Group<f_Group>, Flags<[CC1Option]>,
   HelpText<"Enable Objective-C garbage collection">;
 def fobjc_legacy_dispatch : Flag<["-"], "fobjc-legacy-dispatch">, Group<f_Group>;
 def fobjc_new_property : Flag<["-"], "fobjc-new-property">, Group<clang_ignored_f_Group>;
-def fobjc_infer_related_result_type : Flag<["-"], "fobjc-infer-related-result-type">, 
+def fobjc_infer_related_result_type : Flag<["-"], "fobjc-infer-related-result-type">,
                                       Group<f_Group>;
 def fno_objc_infer_related_result_type : Flag<["-"],
   "fno-objc-infer-related-result-type">, Group<f_Group>,

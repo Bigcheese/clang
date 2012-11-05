@@ -106,7 +106,7 @@ namespace clang {
     }
     
     /// \brief Retrieve the innermost template argument list.
-    const ArgList &getInnermost() const { 
+    const llvm::ArgList &getInnermost() const { 
       return TemplateArgumentLists.front(); 
     }
   };

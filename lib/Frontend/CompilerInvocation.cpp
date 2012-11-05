@@ -12,11 +12,8 @@
 #include "clang/Basic/Version.h"
 #include "clang/Basic/FileManager.h"
 #include "clang/Lex/HeaderSearchOptions.h"
-#include "clang/Driver/Arg.h"
-#include "clang/Driver/ArgList.h"
 #include "clang/Driver/Options.h"
 #include "clang/Driver/DriverDiagnostic.h"
-#include "clang/Driver/OptTable.h"
 #include "clang/Driver/Option.h"
 #include "clang/Frontend/CompilerInvocation.h"
 #include "clang/Frontend/LangStandard.h"
@@ -27,8 +24,11 @@
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/StringSwitch.h"
 #include "llvm/ADT/Triple.h"
+#include "llvm/Support/Arg.h"
+#include "llvm/Support/ArgList.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/Host.h"
+#include "llvm/Support/OptTable.h"
 #include "llvm/Support/Path.h"
 using namespace clang;
 

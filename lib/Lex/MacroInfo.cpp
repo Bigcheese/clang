@@ -117,7 +117,7 @@ bool MacroInfo::isIdenticalTo(const MacroInfo &Other, Preprocessor &PP) const {
     return false;
 
   // Check arguments.
-  for (arg_iterator I = arg_begin(), OI = Other.arg_begin(), E = arg_end();
+  for llvm::arg_iterator I = arg_begin(), OI = Other.arg_begin(), E = arg_end();
        I != E; ++I, ++OI)
     if (*I != *OI) return false;
 

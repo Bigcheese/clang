@@ -15,11 +15,14 @@
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/Support/Path.h"
 
+namespace llvm {
+  class DerivedArgList;
+  class InputArgList;
+}
+
 namespace clang {
 namespace driver {
-  class DerivedArgList;
   class Driver;
-  class InputArgList;
   class JobList;
   class ToolChain;
 
@@ -33,11 +36,11 @@ class Compilation {
   const ToolChain &DefaultToolChain;
 
   /// The original (untranslated) input argument list.
-  InputArgList *Args;
+  llvm::InputArgList *Args;
 
   /// The driver translated arguments. Note that toolchains may perform their
   /// own argument translation.
-  DerivedArgList *TranslatedArgs;
+  llvm::DerivedArgList *TranslatedArgs;
 
   /// The list of actions.
   ActionList Actions;
@@ -48,7 +51,7 @@ class Compilation {
   /// Cache of translated arguments for a particular tool chain and bound
   /// architecture.
   llvm::DenseMap<std::pair<const ToolChain*, const char*>,
-                 DerivedArgList*> TCArgs;
+                 llvm::DerivedArgList*> TCArgs;
 
   /// Temporary files which should be removed on exit.
   ArgStringList TempFiles;
@@ -65,18 +68,18 @@ class Compilation {
 
 public:
   Compilation(const Driver &D, const ToolChain &DefaultToolChain,
-              InputArgList *Args, DerivedArgList *TranslatedArgs);
+              llvm::InputArgList *Args, llvm::DerivedArgList *TranslatedArgs);
   ~Compilation();
 
   const Driver &getDriver() const { return TheDriver; }
 
   const ToolChain &getDefaultToolChain() const { return DefaultToolChain; }
 
-  const InputArgList &getInputArgs() const { return *Args; }
+  const llvm::InputArgList &getInputArgs() const { return *Args; }
 
-  const DerivedArgList &getArgs() const { return *TranslatedArgs; }
+  const llvm::DerivedArgList &getArgs() const { return *TranslatedArgs; }
 
-  DerivedArgList &getArgs() { return *TranslatedArgs; }
+  llvm::DerivedArgList &getArgs() { return *TranslatedArgs; }
 
   ActionList &getActions() { return Actions; }
   const ActionList &getActions() const { return Actions; }
@@ -101,8 +104,8 @@ public:
   /// tool chain \p TC (or the default tool chain, if TC is not specified).
   ///
   /// \param BoundArch - The bound architecture name, or 0.
-  const DerivedArgList &getArgsForToolChain(const ToolChain *TC,
-                                            const char *BoundArch);
+  const llvm::DerivedArgList &getArgsForToolChain(const ToolChain *TC,
+                                                  const char *BoundArch);
 
   /// addTempFile - Add a file to remove on exit, and returns its
   /// argument.

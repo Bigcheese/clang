@@ -14,9 +14,12 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/SmallVector.h"
 
+namespace llvm {
+  class Arg;
+}
+
 namespace clang {
 namespace driver {
-  class Arg;
 
 /// Action - Represent an abstract compilation step to perform.
 ///
@@ -94,11 +97,11 @@ public:
 
 class InputAction : public Action {
   virtual void anchor();
-  const Arg &Input;
+  const llvm::Arg &Input;
 public:
-  InputAction(const Arg &_Input, types::ID _Type);
+  InputAction(const llvm::Arg &_Input, types::ID _Type);
 
-  const Arg &getInputArg() const { return Input; }
+  const llvm::Arg &getInputArg() const { return Input; }
 
   static bool classof(const Action *A) {
     return A->getKind() == InputClass;

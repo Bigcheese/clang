@@ -231,7 +231,7 @@ public:
   /// getArgumentNum - Return the argument number of the specified identifier,
   /// or -1 if the identifier is not a formal argument identifier.
   int getArgumentNum(IdentifierInfo *Arg) const {
-    for (arg_iterator I = arg_begin(), E = arg_end(); I != E; ++I)
+    for llvm::arg_iterator I = arg_begin(), E = arg_end(); I != E; ++I)
       if (*I == Arg) return I-arg_begin();
     return -1;
   }

@@ -35,7 +35,7 @@ class InputInfo {
 
   union {
     const char *Filename;
-    const Arg *InputArg;
+    const llvm::Arg *InputArg;
   } Data;
   Class Kind;
   types::ID Type;
@@ -50,7 +50,7 @@ public:
     : Kind(Filename), Type(_Type), BaseInput(_BaseInput) {
     Data.Filename = _Filename;
   }
-  InputInfo(const Arg *_InputArg, types::ID _Type, const char *_BaseInput)
+  InputInfo(const llvm::Arg *_InputArg, types::ID _Type, const char *_BaseInput)
     : Kind(InputArg), Type(_Type), BaseInput(_BaseInput) {
     Data.InputArg = _InputArg;
   }
@@ -65,7 +65,7 @@ public:
     assert(isFilename() && "Invalid accessor.");
     return Data.Filename;
   }
-  const Arg &getInputArg() const {
+  const llvm::Arg &getInputArg() const {
     assert(isInputArg() && "Invalid accessor.");
     return *Data.InputArg;
   }

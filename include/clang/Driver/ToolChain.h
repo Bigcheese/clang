@@ -17,15 +17,18 @@
 #include "llvm/Support/Path.h"
 #include <string>
 
+namespace llvm {
+  class ArgList;
+  class DerivedArgList;
+  class InputArgList;
+}
+
 namespace clang {
   class ObjCRuntime;
 
 namespace driver {
-  class ArgList;
   class Compilation;
-  class DerivedArgList;
   class Driver;
-  class InputArgList;
   class JobAction;
   class Tool;
 
@@ -61,13 +64,13 @@ protected:
 
   /// \name Utilities for implementing subclasses.
   ///@{
-  static void addSystemInclude(const ArgList &DriverArgs,
+  static void addSystemInclude(const llvm::ArgList &DriverArgs,
                                ArgStringList &CC1Args,
                                const Twine &Path);
-  static void addExternCSystemInclude(const ArgList &DriverArgs,
+  static void addExternCSystemInclude(const llvm::ArgList &DriverArgs,
                                       ArgStringList &CC1Args,
                                       const Twine &Path);
-  static void addSystemIncludes(const ArgList &DriverArgs,
+  static void addSystemIncludes(const llvm::ArgList &DriverArgs,
                                 ArgStringList &CC1Args,
                                 ArrayRef<StringRef> Paths);
   ///@}
@@ -102,8 +105,8 @@ public:
   /// specific translations are needed.
   ///
   /// \param BoundArch - The bound architecture name, or 0.
-  virtual DerivedArgList *TranslateArgs(const DerivedArgList &Args,
-                                        const char *BoundArch) const {
+  virtual llvm::DerivedArgList *TranslateArgs(const llvm::DerivedArgList &Args,
+                                              const char *BoundArch) const {
     return 0;
   }
 
@@ -195,7 +198,7 @@ public:
 
   /// ComputeLLVMTriple - Return the LLVM target triple to use, after taking
   /// command line arguments into account.
-  virtual std::string ComputeLLVMTriple(const ArgList &Args,
+  virtual std::string ComputeLLVMTriple(const llvm::ArgList &Args,
                                  types::ID InputType = types::TY_INVALID) const;
 
   /// ComputeEffectiveClangTriple - Return the Clang triple to use for this
@@ -203,7 +206,7 @@ public:
   /// example, on Darwin the -mmacosx-version-min= command line argument (which
   /// sets the deployment target) determines the version in the triple passed to
   /// Clang.
-  virtual std::string ComputeEffectiveClangTriple(const ArgList &Args,
+  virtual std::string ComputeEffectiveClangTriple(const llvm::ArgList &Args,
                                  types::ID InputType = types::TY_INVALID) const;
 
   /// getDefaultObjCRuntime - Return the default Objective-C runtime
@@ -223,7 +226,7 @@ public:
   ///
   /// This routine is responsible for adding the necessary cc1 arguments to
   /// include headers from standard system header directories.
-  virtual void AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangSystemIncludeArgs(const llvm::ArgList &DriverArgs,
                                          ArgStringList &CC1Args) const;
 
   // addClangTargetOptions - Add options that need to be passed to cc1 for
@@ -232,32 +235,32 @@ public:
 
   // GetRuntimeLibType - Determine the runtime library type to use with the
   // given compilation arguments.
-  virtual RuntimeLibType GetRuntimeLibType(const ArgList &Args) const;
+  virtual RuntimeLibType GetRuntimeLibType(const llvm::ArgList &Args) const;
 
   // GetCXXStdlibType - Determine the C++ standard library type to use with the
   // given compilation arguments.
-  virtual CXXStdlibType GetCXXStdlibType(const ArgList &Args) const;
+  virtual CXXStdlibType GetCXXStdlibType(const llvm::ArgList &Args) const;
 
   /// AddClangCXXStdlibIncludeArgs - Add the clang -cc1 level arguments to set
   /// the include paths to use for the given C++ standard library type.
-  virtual void AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangCXXStdlibIncludeArgs(const llvm::ArgList &DriverArgs,
                                             ArgStringList &CC1Args) const;
 
   /// AddCXXStdlibLibArgs - Add the system specific linker arguments to use
   /// for the given C++ standard library type.
-  virtual void AddCXXStdlibLibArgs(const ArgList &Args,
+  virtual void AddCXXStdlibLibArgs(const llvm::ArgList &Args,
                                    ArgStringList &CmdArgs) const;
 
   /// AddCCKextLibArgs - Add the system specific linker arguments to use
   /// for kernel extensions (Darwin-specific).
-  virtual void AddCCKextLibArgs(const ArgList &Args,
+  virtual void AddCCKextLibArgs(const llvm::ArgList &Args,
                                 ArgStringList &CmdArgs) const;
 
   /// AddFastMathRuntimeIfAvailable - If a runtime library exists that sets
   /// global flags for unsafe floating point math, add it and return true.
   ///
   /// This checks for presence of the -ffast-math or -funsafe-math flags.
-  virtual bool AddFastMathRuntimeIfAvailable(const ArgList &Args,
+  virtual bool AddFastMathRuntimeIfAvailable(const llvm::ArgList &Args,
                                              ArgStringList &CmdArgs) const;
 };
 

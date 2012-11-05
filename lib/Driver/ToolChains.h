@@ -81,7 +81,7 @@ protected:
 
   public:
     GCCInstallationDetector(const Driver &D, const llvm::Triple &TargetTriple,
-                            const ArgList &Args);
+                            const llvm::ArgList &Args);
 
     /// \brief Check whether we detected a valid GCC install.
     bool isValid() const { return IsValid; }
@@ -111,7 +111,7 @@ protected:
       SmallVectorImpl<StringRef> &MultiarchTripleAliases);
 
     void ScanLibDirForGCCTriple(llvm::Triple::ArchType TargetArch,
-                                const ArgList &Args,
+                                const llvm::ArgList &Args,
                                 const std::string &LibDir,
                                 StringRef CandidateTriple,
                                 bool NeedsMultiarchSuffix = false);
@@ -122,7 +122,7 @@ protected:
   mutable llvm::DenseMap<unsigned, Tool*> Tools;
 
 public:
-  Generic_GCC(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  Generic_GCC(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
   ~Generic_GCC();
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
@@ -200,13 +200,13 @@ private:
   std::string iOSVersionMin;
 
 private:
-  void AddDeploymentTarget(DerivedArgList &Args) const;
+  void AddDeploymentTarget(llvm::DerivedArgList &Args) const;
 
 public:
   Darwin(const Driver &D, const llvm::Triple& Triple);
   ~Darwin();
 
-  std::string ComputeEffectiveClangTriple(const ArgList &Args,
+  std::string ComputeEffectiveClangTriple(const llvm::ArgList &Args,
                                           types::ID InputType) const;
 
   /// @name Darwin Specific Toolchain API
@@ -258,7 +258,7 @@ public:
   /// getDarwinArchName - Get the "Darwin" arch name for a particular compiler
   /// invocation. For example, Darwin treats different ARM variations as
   /// distinct architectures.
-  StringRef getDarwinArchName(const ArgList &Args) const;
+  StringRef getDarwinArchName(const llvm::ArgList &Args) const;
 
   bool isIPhoneOSVersionLT(unsigned V0, unsigned V1=0, unsigned V2=0) const {
     assert(isTargetIPhoneOS() && "Unexpected call for OS X target!");
@@ -271,12 +271,12 @@ public:
   }
 
   /// AddLinkARCArgs - Add the linker arguments to link the ARC runtime library.
-  virtual void AddLinkARCArgs(const ArgList &Args,
+  virtual void AddLinkARCArgs(const llvm::ArgList &Args,
                               ArgStringList &CmdArgs) const = 0;
   
   /// AddLinkRuntimeLibArgs - Add the linker arguments to link the compiler
   /// runtime library.
-  virtual void AddLinkRuntimeLibArgs(const ArgList &Args,
+  virtual void AddLinkRuntimeLibArgs(const llvm::ArgList &Args,
                                      ArgStringList &CmdArgs) const = 0;
   
   /// }
@@ -290,8 +290,8 @@ public:
   virtual ObjCRuntime getDefaultObjCRuntime(bool isNonFragile) const;
   virtual bool hasBlocksRuntime() const;
 
-  virtual DerivedArgList *TranslateArgs(const DerivedArgList &Args,
-                                        const char *BoundArch) const;
+  virtual llvm::DerivedArgList *TranslateArgs(const llvm::DerivedArgList &Args,
+                                              const char *BoundArch) const;
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
@@ -374,18 +374,18 @@ public:
   /// @name Darwin ToolChain Implementation
   /// {
 
-  virtual void AddLinkRuntimeLibArgs(const ArgList &Args,
+  virtual void AddLinkRuntimeLibArgs(const llvm::ArgList &Args,
                                      ArgStringList &CmdArgs) const;
-  void AddLinkRuntimeLib(const ArgList &Args, ArgStringList &CmdArgs, 
+  void AddLinkRuntimeLib(const llvm::ArgList &Args, ArgStringList &CmdArgs, 
                          const char *DarwinStaticLib) const;
   
-  virtual void AddCXXStdlibLibArgs(const ArgList &Args,
+  virtual void AddCXXStdlibLibArgs(const llvm::ArgList &Args,
                                    ArgStringList &CmdArgs) const;
 
-  virtual void AddCCKextLibArgs(const ArgList &Args,
+  virtual void AddCCKextLibArgs(const llvm::ArgList &Args,
                                 ArgStringList &CmdArgs) const;
 
-  virtual void AddLinkARCArgs(const ArgList &Args,
+  virtual void AddLinkARCArgs(const llvm::ArgList &Args,
                               ArgStringList &CmdArgs) const;
   /// }
 };
@@ -393,10 +393,10 @@ public:
 /// Darwin_Generic_GCC - Generic Darwin tool chain using gcc.
 class LLVM_LIBRARY_VISIBILITY Darwin_Generic_GCC : public Generic_GCC {
 public:
-  Darwin_Generic_GCC(const Driver &D, const llvm::Triple& Triple, const ArgList &Args)
+  Darwin_Generic_GCC(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args)
     : Generic_GCC(D, Triple, Args) {}
 
-  std::string ComputeEffectiveClangTriple(const ArgList &Args,
+  std::string ComputeEffectiveClangTriple(const llvm::ArgList &Args,
                                           types::ID InputType) const;
 
   virtual const char *GetDefaultRelocationModel() const { return "pic"; }
@@ -405,7 +405,7 @@ public:
 class LLVM_LIBRARY_VISIBILITY Generic_ELF : public Generic_GCC {
   virtual void anchor();
 public:
-  Generic_ELF(const Driver &D, const llvm::Triple& Triple, const ArgList &Args)
+  Generic_ELF(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args)
     : Generic_GCC(D, Triple, Args) {}
 
   virtual bool IsIntegratedAssemblerDefault() const {
@@ -417,7 +417,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY AuroraUX : public Generic_GCC {
 public:
-  AuroraUX(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  AuroraUX(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
@@ -425,7 +425,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY Solaris : public Generic_GCC {
 public:
-  Solaris(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  Solaris(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
@@ -436,7 +436,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY OpenBSD : public Generic_ELF {
 public:
-  OpenBSD(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  OpenBSD(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool IsMathErrnoDefault() const { return false; }
   virtual bool IsObjCNonFragileABIDefault() const { return true; }
@@ -447,7 +447,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY Bitrig : public Generic_ELF {
 public:
-  Bitrig(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  Bitrig(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool IsMathErrnoDefault() const { return false; }
   virtual bool IsObjCNonFragileABIDefault() const { return true; }
@@ -456,9 +456,9 @@ public:
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
 
-  virtual void AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangCXXStdlibIncludeArgs(const llvm::ArgList &DriverArgs,
                                             ArgStringList &CC1Args) const;
-  virtual void AddCXXStdlibLibArgs(const ArgList &Args,
+  virtual void AddCXXStdlibLibArgs(const llvm::ArgList &Args,
                                    ArgStringList &CmdArgs) const;
   virtual unsigned GetDefaultStackProtectorLevel(bool KernelOrKext) const {
      return 1;
@@ -467,7 +467,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY FreeBSD : public Generic_ELF {
 public:
-  FreeBSD(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  FreeBSD(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool IsMathErrnoDefault() const { return false; }
   virtual bool IsObjCNonFragileABIDefault() const { return true; }
@@ -478,7 +478,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY NetBSD : public Generic_ELF {
 public:
-  NetBSD(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  NetBSD(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool IsMathErrnoDefault() const { return false; }
   virtual bool IsObjCNonFragileABIDefault() const { return true; }
@@ -489,7 +489,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY Minix : public Generic_ELF {
 public:
-  Minix(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  Minix(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
@@ -497,7 +497,7 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY DragonFly : public Generic_ELF {
 public:
-  DragonFly(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  DragonFly(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool IsMathErrnoDefault() const { return false; }
 
@@ -507,17 +507,17 @@ public:
 
 class LLVM_LIBRARY_VISIBILITY Linux : public Generic_ELF {
 public:
-  Linux(const Driver &D, const llvm::Triple& Triple, const ArgList &Args);
+  Linux(const Driver &D, const llvm::Triple& Triple, const llvm::ArgList &Args);
 
   virtual bool HasNativeLLVMSupport() const;
 
   virtual Tool &SelectTool(const Compilation &C, const JobAction &JA,
                            const ActionList &Inputs) const;
 
-  virtual void AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangSystemIncludeArgs(const llvm::ArgList &DriverArgs,
                                          ArgStringList &CC1Args) const;
   virtual void addClangTargetOptions(ArgStringList &CC1Args) const;
-  virtual void AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangCXXStdlibIncludeArgs(const llvm::ArgList &DriverArgs,
                                             ArgStringList &CC1Args) const;
 
   std::string Linker;
@@ -525,7 +525,7 @@ public:
 
 private:
   static bool addLibStdCXXIncludePaths(Twine Base, Twine TargetArchDir,
-                                       const ArgList &DriverArgs,
+                                       const llvm::ArgList &DriverArgs,
                                        ArgStringList &CC1Args);
 };
 
@@ -566,9 +566,9 @@ public:
   virtual const char *GetDefaultRelocationModel() const;
   virtual const char *GetForcedPicModel() const;
 
-  virtual void AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangSystemIncludeArgs(const llvm::ArgList &DriverArgs,
                                          ArgStringList &CC1Args) const;
-  virtual void AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+  virtual void AddClangCXXStdlibIncludeArgs(const llvm::ArgList &DriverArgs,
                                             ArgStringList &CC1Args) const;
 
 };

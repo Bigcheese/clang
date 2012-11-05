@@ -9,12 +9,12 @@
 
 #include "ToolChains.h"
 
-#include "clang/Driver/Arg.h"
-#include "clang/Driver/ArgList.h"
 #include "clang/Driver/Compilation.h"
 #include "clang/Driver/Driver.h"
 #include "clang/Driver/Options.h"
 #include "clang/Basic/Version.h"
+#include "llvm/Support/Arg.h"
+#include "llvm/Support/ArgList.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/Path.h"
 
@@ -302,7 +302,7 @@ static bool getVisualStudioDir(std::string &path) {
 
 #endif // _MSC_VER
 
-void Windows::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
+void Windows::AddClangSystemIncludeArgs(const llvm::ArgList &DriverArgs,
                                         ArgStringList &CC1Args) const {
   if (DriverArgs.hasArg(options::OPT_nostdinc))
     return;
@@ -360,7 +360,7 @@ void Windows::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
   addSystemIncludes(DriverArgs, CC1Args, Paths);
 }
 
-void Windows::AddClangCXXStdlibIncludeArgs(const ArgList &DriverArgs,
+void Windows::AddClangCXXStdlibIncludeArgs(const llvm::ArgList &DriverArgs,
                                            ArgStringList &CC1Args) const {
   // FIXME: There should probably be logic here to find libc++ on Windows.
 }

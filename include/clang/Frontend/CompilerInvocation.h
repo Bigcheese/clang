@@ -29,14 +29,16 @@
 #include <string>
 #include <vector>
 
+namespace llvm {
+  class ArgList;
+}
+
 namespace clang {
 
 class CompilerInvocation;
 class DiagnosticsEngine;
 
-namespace driver {
-class ArgList;
-}
+
 
 /// \brief Fill out Opts based on the options given in Args.
 ///
